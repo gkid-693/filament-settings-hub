@@ -6,6 +6,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use TomatoPHP\FilamentSettingsHub\Facades\FilamentSettingsHub;
+use TomatoPHP\FilamentSettingsHub\Pages\ColorSettings;
 use TomatoPHP\FilamentSettingsHub\Pages\SettingsHub;
 use TomatoPHP\FilamentSettingsHub\Pages\SiteSettings;
 use TomatoPHP\FilamentSettingsHub\Pages\SocialMenuSettings;
@@ -18,6 +19,7 @@ class FilamentSettingsHubPlugin implements Plugin
     public static bool | \Closure $allowSiteSettings = true;
 
     public static bool | \Closure $allowSocialMenuSettings = true;
+    public static bool | \Closure $allowColorSettings = true;
 
     public static bool | \Closure $allowShield = false;
 
@@ -49,6 +51,13 @@ class FilamentSettingsHubPlugin implements Plugin
         return $this;
     }
 
+    public function allowColorSettings(bool | \Closure $allow = true): static
+    {
+        self::$allowColorSettings = $allow;
+
+        return $this;
+    }
+
     public function isSiteSettingAllowed(): bool
     {
         return $this->evaluate(self::$allowSiteSettings);
@@ -57,6 +66,11 @@ class FilamentSettingsHubPlugin implements Plugin
     public function isSocialMenuSettingAllowed(): bool
     {
         return $this->evaluate(self::$allowSocialMenuSettings);
+    }
+
+    public function isColorSettingAllowed(): bool
+    {
+        return $this->evaluate(self::$allowColorSettings);
     }
 
     public function isShieldAllowed(): bool
@@ -74,6 +88,10 @@ class FilamentSettingsHubPlugin implements Plugin
 
         if ($this->isSocialMenuSettingAllowed()) {
             $pages[] = SocialMenuSettings::class;
+        }
+
+        if ($this->isColorSettingAllowed()) {
+            $pages[] = ColorSettings::class;
         }
 
         $pages[] = SettingsHub::class;
@@ -102,6 +120,16 @@ class FilamentSettingsHubPlugin implements Plugin
                 ->label('filament-settings-hub::messages.settings.social.title')
                 ->icon('heroicon-s-bars-3')
                 ->description('filament-settings-hub::messages.settings.social.description')
+                ->group('filament-settings-hub::messages.settings.group');
+        }
+
+        if ($this->isColorSettingAllowed()) {
+            $settings[] = SettingHold::make()
+                ->page(ColorSettings::class)
+                ->order(0)
+                ->label('filament-settings-hub::messages.settings.color.title')
+                ->icon('heroicon-o-sparkles')
+                ->description('filament-settings-hub::messages.settings.color.description')
                 ->group('filament-settings-hub::messages.settings.group');
         }
 

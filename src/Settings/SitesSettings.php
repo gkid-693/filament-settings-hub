@@ -24,6 +24,11 @@ class SitesSettings extends Settings
 
     public ?array $site_social = [];
 
+    public ?string $site_primary_color = null;
+    public ?string $site_secondary_color = null;
+    public ?string $site_tertiary_color = null;
+
+
     public static function group(): string
     {
         return 'sites';
