@@ -18,10 +18,24 @@ Manage your Filament app settings with GUI and helpers
 
 ## Installation
 
-```bash
-composer require tomatophp/filament-settings-hub
+Open your Laravel project’s `composer.json` and the bellow codes
+
+```text
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/gkid-693/filament-settings-hub.git"
+    }
+],
+"require": {
+    "tomatophp/filament-settings-hub": "dev-master"
+}
+
 ```
-fadymondy
+
+```bash
+composer update tomatophp/filament-settings-hub --with-all-dependencies
+```
 after publish and migrate settings table please run this command
 
 ```bash
@@ -35,6 +49,7 @@ finally register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
     \TomatoPHP\FilamentSettingsHub\FilamentSettingsHubPlugin::make()
         ->allowSiteSettings()
         ->allowSocialMenuSettings()
+        ->allowColorSettings()
 )
 ```
 
